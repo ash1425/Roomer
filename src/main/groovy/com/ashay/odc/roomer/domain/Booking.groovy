@@ -1,36 +1,47 @@
 package com.ashay.odc.roomer.domain
 
 import org.springframework.data.annotation.Id
+import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 class Booking {
 
     @Id
-    public String id
+    private String id
 
-    public String roomName
+    @DBRef
+    private Room room
 
-    public String teamName
+    @DBRef
+    private Team team
 
-    public Date startTime
+    private Date startTime
 
-    public Date endTime
+    private Date endTime
 
-    String getRoomName() {
-        return roomName
+    String getId() {
+        return id
     }
 
-    void setRoomName(String roomName) {
-        this.roomName = roomName
+    void setId(String id) {
+        this.id = id
     }
 
-    String getTeamName() {
-        return teamName
+    Room getRoom() {
+        return room
     }
 
-    void setTeamName(String teamName) {
-        this.teamName = teamName
+    void setRoom(Room room) {
+        this.room = room
+    }
+
+    Team getTeam() {
+        return team
+    }
+
+    void setTeam(Team team) {
+        this.team = team
     }
 
     Date getStartTime() {
@@ -44,6 +55,7 @@ class Booking {
     Date getEndTime() {
         return endTime
     }
+
     void setEndTime(Date endTime) {
         this.endTime = endTime
     }
