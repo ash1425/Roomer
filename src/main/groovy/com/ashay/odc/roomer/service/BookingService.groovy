@@ -4,12 +4,9 @@ import com.ashay.odc.roomer.domain.Booking
 import com.ashay.odc.roomer.domain.Room
 import com.ashay.odc.roomer.domain.Team
 import com.ashay.odc.roomer.repositories.BookingsRepository
-import com.ashay.odc.roomer.repositories.RoomsRepository
-import com.ashay.odc.roomer.repositories.TeamsRepository
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
-import org.springframework.util.StringUtils
 
 @Service
 class BookingService {
@@ -19,15 +16,15 @@ class BookingService {
 
     public Booking book(Room room, Team team, Date startTime, int durationInMins) {
 
-        if (bookingRepository.findByRoomAndEndTimeBetween(room, getStartTime(startTime), getEndTime(startTime, durationInMins)) ||
-            bookingRepository.findByRoomAndStartTimeBetween(room, getStartTime(startTime), getEndTime(startTime, durationInMins))) {
+        if (bookingRepository.findByRoomAndEndTimeBetween(room, getLowerBound(startTime), getHigherBound(startTime, durationInMins))
+                || bookingRepository.findByRoomAndStartTimeBetween(room, getLowerBound(startTime), getHigherBound(startTime, durationInMins))) {
             throw new RuntimeException("Booking Already exists!")
         }
         Booking booking = new Booking()
         booking.room = room
         booking.team = team
         booking.startTime = startTime
-        booking.endTime = getEndTime(startTime, durationInMins)
+        booking.endTime = getHigherBound(startTime, durationInMins)
 
         bookingRepository.save(booking)
     }
@@ -44,11 +41,11 @@ class BookingService {
         }
     }
 
-    private static def getEndTime(Date startTime, int durationInMins) {
+    private static def getHigherBound(Date startTime, int durationInMins) {
         new DateTime(startTime).plusMinutes(--durationInMins).toDate()
     }
 
-    private static def getStartTime(Date startTime) {
+    private static def getLowerBound(Date startTime) {
         new DateTime(startTime).minusMinutes(1).toDate()
     }
 }
