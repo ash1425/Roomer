@@ -24,7 +24,7 @@ class BookingService {
         booking.room = room
         booking.team = team
         booking.startTime = startTime
-        booking.endTime = getHigherBound(startTime, durationInMins)
+        booking.endTime = new DateTime(startTime).plusMinutes(durationInMins).toDate()
 
         bookingRepository.save(booking)
     }

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
 
 @Controller
-class EntryPointController {
+class BookingsController {
 
     @Autowired
     private final BookingService bookingService
