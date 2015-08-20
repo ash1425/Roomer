@@ -17,7 +17,8 @@ class BookingService {
     public Booking book(Room room, Team team, Date startTime, int durationInMins) {
 
         if (bookingRepository.findByRoomAndEndTimeBetween(room, getLowerBound(startTime), getHigherBound(startTime, durationInMins))
-                || bookingRepository.findByRoomAndStartTimeBetween(room, getLowerBound(startTime), getHigherBound(startTime, durationInMins))) {
+                || bookingRepository.findByRoomAndStartTimeBetween(room, getLowerBound(startTime), getHigherBound(startTime, durationInMins))
+                || bookingRepository.findByRoomAndStartTimeAndEndTime(room, startTime, getHigherBound(startTime, durationInMins))) {
             throw new RuntimeException("Booking Already exists!")
         }
         Booking booking = new Booking()
@@ -42,10 +43,10 @@ class BookingService {
     }
 
     private static def getHigherBound(Date startTime, int durationInMins) {
-        new DateTime(startTime).plusMinutes(--durationInMins).toDate()
+        new DateTime(startTime).plusMinutes(durationInMins).toDate()
     }
 
     private static def getLowerBound(Date startTime) {
-        new DateTime(startTime).minusMinutes(1).toDate()
+        new DateTime(startTime).toDate()
     }
 }

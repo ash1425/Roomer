@@ -11,4 +11,6 @@ public interface BookingsRepository extends MongoRepository<Booking, String> {
     public List<Booking> findByRoomAndStartTimeBetween(Room room, Date startTime, Date endTime)
 
     public List<Booking> findByRoom(String roomName)
+
+    public List<Booking> findByRoomAndStartTimeAndEndTime(Room room, Date startDate, Date endDate)
 }

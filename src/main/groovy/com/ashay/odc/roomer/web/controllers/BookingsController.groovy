@@ -8,6 +8,7 @@ import org.apache.velocity.tools.generic.DateTool
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
+import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -36,12 +37,19 @@ class BookingsController {
     }
 
     @RequestMapping(value = "/book", method = RequestMethod.POST)
-    public ModelAndView book(@ModelAttribute BookingForm bookingForm){
-        bookingService.book(roomsRepository.findByRoomName(bookingForm.roomName), teamsRepository.findByTeamName(bookingForm.teamName),
-                DateTime.now().withTimeAtStartOfDay().plusHours(bookingForm.startTimeHours.toInteger()).plusMinutes(bookingForm.startTimeMins.toInteger()).toDate(),
-                bookingForm.duration.toInteger())
-        ModelAndView home = showHome()
-        home.addObject("saved", true)
+    public ModelAndView book(@ModelAttribute BookingForm bookingForm, BindingResult result){
+        ModelAndView home
+        if(result.hasErrors()) {
+            home = showHome()
+            home.addObject("validationErrors", true)
+        }else {
+            bookingService.book(roomsRepository.findByRoomName(bookingForm.roomName), teamsRepository.findByTeamName(bookingForm.teamName),
+                    DateTime.now().withTimeAtStartOfDay().plusHours(bookingForm.startTimeHours).plusMinutes(bookingForm.startTimeMins).toDate(),
+                    bookingForm.duration)
+            home = showHome()
+            home.addObject("saved", true)
+        }
+
         home
     }
 }
