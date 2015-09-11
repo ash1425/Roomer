@@ -7,6 +7,7 @@ import com.ashay.odc.roomer.repositories.BookingsRepository
 import com.ashay.odc.roomer.repositories.RoomsRepository
 import com.ashay.odc.roomer.repositories.TeamsRepository
 import org.joda.time.DateTime
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,6 +46,11 @@ public class BookingServiceTest {
         bookingService.book(roomsRepository.findByRoomName("room1"), teamsRepository.findByTeamName("team1"), DateTime.now().withTimeAtStartOfDay().toDate(),30)
     }
 
+    @After
+    def void "clear data after test"() {
+        bookingRepository.deleteAll()
+    }
+
     @Test(expected = RuntimeException)
     def void "book should not book overlapping slot for same room - after"() {
        bookingService.book(roomsRepository.findByRoomName("room1"), teamsRepository.findByTeamName("team2"), DateTime.now().withTimeAtStartOfDay().plusMinutes(10).toDate(),30)
@@ -74,6 +80,11 @@ public class BookingServiceTest {
         bookingService.book(roomsRepository.findByRoomName("room1"), teamsRepository.findByTeamName("team2"), DateTime.now().withTimeAtStartOfDay().toDate(),30)
     }
 
+    @Test(expected = RuntimeException)
+    def void "book should not book overlapping slot for same room - inclusive slot"() {
+        bookingService.book(roomsRepository.findByRoomName("room1"), teamsRepository.findByTeamName("team2"), DateTime.now().withTimeAtStartOfDay().plusMinutes(1).toDate(),15)
+    }
+
     @Test
     def void "book should book overlapping slot for different room"() {
         def savedBooking = bookingService.book(roomsRepository.findByRoomName("room2"), teamsRepository.findByTeamName("team1"), DateTime.now().withTimeAtStartOfDay().plusMinutes(10).toDate(),30)
@@ -98,8 +109,8 @@ public class BookingServiceTest {
     @Test
     def void "getAllBookings should return all bookings based on parameters"() {
         bookingService.book(roomsRepository.findByRoomName("room3"), teamsRepository.findByTeamName("team1"), DateTime.now().withTimeAtStartOfDay().toDate(),30)
-        assert bookingService.getAllBookings(null).size() == 2
-        assert bookingService.getAllBookings(null).findAll {it.room.roomName == "roomX"}.size() == 0
-        assert bookingService.getAllBookings(null).findAll {it.room.roomName == "room3"}.size() == 1
+        assert bookingService.getAllBookings().size() == 2
+        assert bookingService.getAllBookings().findAll {it.room.roomName == "roomX"}.size() == 0
+        assert bookingService.getAllBookings().findAll {it.room.roomName == "room3"}.size() == 1
     }
 }

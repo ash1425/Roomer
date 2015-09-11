@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.view.RedirectView
 
 @Controller
 class BookingsController {
@@ -29,7 +30,7 @@ class BookingsController {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView showHome(){
         ModelAndView home = new ModelAndView("home")
-        home.addObject("bookings", bookingService.getAllBookings(null).sort {it.startTime})
+        home.addObject("bookings", bookingService.getAllBookings().sort {it.startTime})
         home.addObject("rooms", roomsRepository.findAll().collect { it.roomName })
         home.addObject("teams", teamsRepository.findAll().collect { it.teamName })
         home.addObject("dateTools", DateTool.newInstance())
@@ -46,7 +47,7 @@ class BookingsController {
             bookingService.book(roomsRepository.findByRoomName(bookingForm.roomName), teamsRepository.findByTeamName(bookingForm.teamName),
                     DateTime.now().withTimeAtStartOfDay().plusHours(bookingForm.startTimeHours).plusMinutes(bookingForm.startTimeMins).toDate(),
                     bookingForm.duration)
-            home = showHome()
+            home = new ModelAndView(new RedirectView("/"))
             home.addObject("saved", true)
         }
 
