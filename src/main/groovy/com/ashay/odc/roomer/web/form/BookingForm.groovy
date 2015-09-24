@@ -16,13 +16,15 @@ class BookingForm {
 
     @Min(0L)
     @Max(23L)
-    int startTimeHours
+    @NotNull
+    Integer startTimeHours
 
     @Min(0L)
     @Max(59L)
-    int startTimeMins
+    @NotNull
+    Integer startTimeMins
 
     @NotNull
-    int duration
+    Integer duration
 
 }

@@ -13,22 +13,23 @@
     <![endif]-->
 </head>
 <body>
-<div class="jumbotron">
+<div class="page-header well">
     <div class="container">
-        <h1>Roomer</h1>
+        <h1><span class="glyphicon glyphicon-blackboard"></span> Roomer</h1>
+
         <h3>Today's Conference Room Bookings</h3>
     </div>
 </div>
 <div class="container">
     <div id="currentBookings">
-        <table border="1">
+        <table class="table table-hover table-responsive table-condensed">
             <thead>
             <tr>
-                <td>Sr No</td>
-                <td>Room Name</td>
-                <td>Team Name</td>
-                <td>Start Time</td>
-                <td>End Time</td>
+                <th>Sr No</th>
+                <th>Room Name</th>
+                <th>Team Name</th>
+                <th>Start Time</th>
+                <th>End Time</th>
             </tr>
             </thead>
             <tbody>
@@ -46,55 +47,59 @@
     </div>
     <hr/>
     <div id="newBooking">
-        <span>New Booking</span>
+        <h3><span class="glyphicon glyphicon-arrow-down"></span> Book a room</h3>
 
-        <form id="bookingForm" name="bookingForm" action="/book" method="post">
-            <p>
-                <label for="roomName">Select Room</label>
-                <select name="roomName">
+        #if($message)
+            <div class="alert alert-danger">
+                <span class="glyphicon glyphicon-alert"></span> ${message}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+        #end
+        <form id="bookingForm" action="book" method="post">
+            <div class="form-group form-inline">
+                <label for="date">Date</label>
+                <input type="text" name="dateText" value="$dateTools.get('dd-MM-yyyy')" class="form-control"
+                       disabled>
+                <label for="roomName">Room</label>
+                <select name="roomName" class="form-control">
                     #foreach($room in $rooms)
                         <option value="$room">$room</option>
                     #end
                 </select>
-            </p>
-            <p>
-                <label for="teamName">Select your team</label>
-                <select name="teamName">
+                <label for="teamName">Team</label>
+                <select name="teamName" class="form-control">
                     #foreach($team in $teams)
                         <option value="$team">$team</option>
                     #end
                 </select>
-            </p>
-            <p>
-                <label for="date">Date</label>
-                <input type="text" name="dateText" value="$dateTools.get('dd-MM-yyyy')" disabled>
-            </p>
+            </div>
+            <br/>
 
-            <p>
+            <div class="form-group form-inline">
                 <label for="startTime">Start Time (24 hrs format)</label>
-                <select name="startTimeHours">
+                <select name="startTimeHours" class="form-control">
+                    <option value="" selected disabled>HH</option>
                     #foreach($i in [0..23])
                         <option value="$i">$i</option>
                     #end
                 </select>
-                <select name="startTimeMins">
+                <select name="startTimeMins" class="form-control">
+                    <option value="" selected disabled>MM</option>
                     #foreach($i in [0..59])
                         <option value="$i">$i</option>
                     #end
                 </select>
-            </p>
-            <p>
                 <label for="duration">Duration In minutes</label>
-                <select name="duration">
+                <select name="duration" class="form-control">
+                    <option value="" selected disabled>Mins</option>
                     #foreach($mins in [15,30,45,60,90,120])
                         <option value="$mins">$mins</option>
                     #end
                 </select>
-            </p>
-            <p>
-                <button type="submit">Book</button>
-                <button type="reset">Cancel</button>
-            </p>
+            </div>
+            <button type="submit" class="btn btn-primary">Book</button>
+            <button type="reset" class="btn btn-default">Cancel</button>
         </form>
     </div>
 </div>

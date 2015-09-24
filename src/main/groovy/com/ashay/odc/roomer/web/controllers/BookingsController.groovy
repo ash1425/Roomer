@@ -13,7 +13,10 @@ import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.servlet.ModelAndView
+import org.springframework.web.servlet.mvc.support.RedirectAttributes
 import org.springframework.web.servlet.view.RedirectView
+
+import javax.validation.Valid
 
 @Controller
 class BookingsController {
@@ -38,19 +41,19 @@ class BookingsController {
     }
 
     @RequestMapping(value = "/book", method = RequestMethod.POST)
-    public ModelAndView book(@ModelAttribute BookingForm bookingForm, BindingResult result){
-        ModelAndView home
+    public ModelAndView book(@Valid @ModelAttribute BookingForm command, BindingResult result, final RedirectAttributes redirectAttributes){
         if(result.hasErrors()) {
-            home = showHome()
-            home.addObject("validationErrors", true)
+            redirectAttributes.addFlashAttribute("message", "Invalid input data!")
         }else {
-            bookingService.book(roomsRepository.findByRoomName(bookingForm.roomName), teamsRepository.findByTeamName(bookingForm.teamName),
-                    DateTime.now().withTimeAtStartOfDay().plusHours(bookingForm.startTimeHours).plusMinutes(bookingForm.startTimeMins).toDate(),
-                    bookingForm.duration)
-            home = new ModelAndView(new RedirectView("/"))
-            home.addObject("saved", true)
+            try{
+                bookingService.book(roomsRepository.findByRoomName(command.roomName), teamsRepository.findByTeamName(command.teamName),
+                        DateTime.now().withTimeAtStartOfDay().plusHours(command.startTimeHours).plusMinutes(command.startTimeMins).toDate(),
+                        command.duration)
+                redirectAttributes.addFlashAttribute("message", "Booking registered!")
+            }catch (RuntimeException e) {
+                redirectAttributes.addFlashAttribute("message", "Room not available for requested slot!")
+            }
         }
-
-        home
+        return new ModelAndView(new RedirectView("/", true, true, false))
     }
 }
