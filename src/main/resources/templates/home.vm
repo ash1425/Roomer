@@ -22,7 +22,7 @@
 </div>
 <div class="container">
     <div id="currentBookings">
-        <table class="table table-hover table-responsive table-condensed">
+        <table class="table table-hover table-responsive table-condensed table-striped">
             <thead>
             <tr>
                 <th>Sr No</th>
@@ -36,22 +36,22 @@
                 #foreach($booking in $bookings)
                 <tr>
                     <td>$foreach.count</td>
-                    <td>$booking.room.roomName</td>
-                    <td>$booking.team.teamName</td>
-                    <td>$dateTools.format('dd-MM-yyyy h:mm a', $booking.startTime)</td>
-                    <td>$dateTools.format('dd-MM-yyyy h:mm a', $booking.endTime)</td>
+                    <td>$booking.room</td>
+                    <td>$booking.team</td>
+                    <td>$dateTools.format('h:mm a', $booking.startTime)</td>
+                    <td>$dateTools.format('h:mm a', $booking.endTime)</td>
                 </tr>
                 #end
             </tbody>
         </table>
     </div>
-    <hr/>
+    <div style="padding-top: 50px;"></div>
     <div id="newBooking">
-        <h3><span class="glyphicon glyphicon-arrow-down"></span> Book a room</h3>
+        <h3><span class="glyphicon glyphicon-triangle-right"></span> Book a room</h3>
 
         #if($message)
-            <div class="alert alert-danger">
-                <span class="glyphicon glyphicon-alert"></span> ${message}
+            <div class="alert alert-info">
+                <span class="glyphicon glyphicon-info-sign"></span> ${message}
                 <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                         aria-hidden="true">&times;</span></button>
             </div>
@@ -63,16 +63,11 @@
                        disabled>
                 <label for="roomName">Room</label>
                 <select name="roomName" class="form-control">
-                    #foreach($room in $rooms)
-                        <option value="$room">$room</option>
-                    #end
+                    <option value="Pinnacle">Pinnacle</option>
+                    <option value="Apex (Another Room)">Apex (Another Room)</option>
                 </select>
                 <label for="teamName">Team</label>
-                <select name="teamName" class="form-control">
-                    #foreach($team in $teams)
-                        <option value="$team">$team</option>
-                    #end
-                </select>
+                <input type="text" name="teamName" class="form-control"/>
             </div>
             <br/>
 

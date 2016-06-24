@@ -2,11 +2,13 @@ package com.ashay.odc.roomer.service
 
 import com.ashay.odc.roomer.domain.Booking
 import com.ashay.odc.roomer.domain.Room
-import com.ashay.odc.roomer.domain.Team
 import com.ashay.odc.roomer.repositories.BookingsRepository
+
 import org.joda.time.DateTime
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+
+import javax.annotation.PostConstruct
 
 @Service
 class BookingService {
@@ -14,7 +16,7 @@ class BookingService {
     @Autowired
     private final BookingsRepository bookingRepository
 
-    public Booking book(Room room, Team team, Date startTime, int durationInMins) {
+    public Booking book(String room, String team, Date startTime, int durationInMins) {
 
         if (bookingRepository.findExistingBookings(room, startTime, getEndDate(startTime, durationInMins))) {
             throw new RuntimeException("Booking Already exists!")

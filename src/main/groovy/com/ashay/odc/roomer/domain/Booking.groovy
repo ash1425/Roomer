@@ -1,7 +1,6 @@
 package com.ashay.odc.roomer.domain
 
 import org.springframework.data.annotation.Id
-import org.springframework.data.mongodb.core.mapping.DBRef
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
@@ -10,11 +9,9 @@ class Booking {
     @Id
     private String id
 
-    @DBRef
-    private Room room
+    private String room
 
-    @DBRef
-    private Team team
+    private String team
 
     private Date startTime
 
@@ -28,19 +25,19 @@ class Booking {
         this.id = id
     }
 
-    Room getRoom() {
+    String getRoom() {
         return room
     }
 
-    void setRoom(Room room) {
+    void setRoom(String room) {
         this.room = room
     }
 
-    Team getTeam() {
+    String getTeam() {
         return team
     }
 
-    void setTeam(Team team) {
+    void setTeam(String team) {
         this.team = team
     }
 

@@ -7,6 +7,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 class RoomerApplication {
 
     static void main(String[] args) {
-        SpringApplication.run RoomerApplication, args
+        SpringApplication.run(RoomerApplication, args)
     }
 }

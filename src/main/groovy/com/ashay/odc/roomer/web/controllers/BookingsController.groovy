@@ -1,7 +1,5 @@
 package com.ashay.odc.roomer.web.controllers
 
-import com.ashay.odc.roomer.repositories.RoomsRepository
-import com.ashay.odc.roomer.repositories.TeamsRepository
 import com.ashay.odc.roomer.service.BookingService
 import com.ashay.odc.roomer.web.form.BookingForm
 import org.apache.velocity.tools.generic.DateTool
@@ -24,18 +22,10 @@ class BookingsController {
     @Autowired
     private final BookingService bookingService
 
-    @Autowired
-    private final RoomsRepository roomsRepository
-
-    @Autowired
-    private final TeamsRepository teamsRepository
-
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public ModelAndView showHome(){
         ModelAndView home = new ModelAndView("home")
         home.addObject("bookings", bookingService.getAllBookings().sort {it.startTime})
-        home.addObject("rooms", roomsRepository.findAll().collect { it.roomName })
-        home.addObject("teams", teamsRepository.findAll().collect { it.teamName })
         home.addObject("dateTools", DateTool.newInstance())
         home
     }
@@ -46,7 +36,7 @@ class BookingsController {
             redirectAttributes.addFlashAttribute("message", "Invalid input data!")
         }else {
             try{
-                bookingService.book(roomsRepository.findByRoomName(command.roomName), teamsRepository.findByTeamName(command.teamName),
+                bookingService.book(command.roomName, command.teamName,
                         DateTime.now().withTimeAtStartOfDay().plusHours(command.startTimeHours).plusMinutes(command.startTimeMins).toDate(),
                         command.duration)
                 redirectAttributes.addFlashAttribute("message", "Booking registered!")
